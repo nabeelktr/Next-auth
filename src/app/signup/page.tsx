@@ -1,18 +1,47 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { axios } from "axios";
-import { useState } from "react";
+import axios  from "axios";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import React from "react";
+import toast from "react-hot-toast";
 
 export default function Signup() {
-  const [user, setUser] = useState({
+  const router = useRouter();
+  const [user, setUser] = React.useState({
     email: "",
     password: "",
     username: "",
   });
 
-  const onSignup = async () => {};
+  const [buttonDisabled, setButtonDisabled] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const onSignup = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.post("/api/users/signup", user);
+      router.push("/login");
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      user.email.length > 0 &&
+      user.password.length > 0 &&
+      user.username.length > 0
+    ) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
+
   return (
     <div className=" flex flex-col min-h-screen justify-center items-center py-2">
       <h1>Signup</h1>
@@ -45,10 +74,11 @@ export default function Signup() {
         placeholder="password"
       />
       <button
-        // onClick={onSignup}
+        onClick={onSignup}
+        disabled={buttonDisabled}
         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
       >
-        {/* {buttonDisabled ? "No signup" : "Signup"} */}Signup
+        Signup
       </button>
       <Link href="/login">Visit Login page</Link>
     </div>
