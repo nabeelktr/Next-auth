@@ -1,17 +1,17 @@
 import {connect} from "@/dbConfig/dbConfig";
-import {User} from "@/models/userModel";
+import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from 'jsonwebtoken';
 
-connect()
+connect();
 
 export async function POST(request: NextRequest){
     try {
 
         const reqBody = await request.json()
         const {email, password} = reqBody;
-
+        console.log(reqBody);
         //check if user exists
         const user = await User.findOne({email})
         if(!user){
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest){
             email: user.email
         }
         //create token
-        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: "1d"})
+        const token =  jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: "1d"})
 
         const response = NextResponse.json({
             message: "Login successful",

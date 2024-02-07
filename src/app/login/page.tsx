@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, {useEffect} from "react";
 import {useRouter} from "next/navigation";
 import axios from "axios";
-import { toast } from "react-hot-toast";
+import { ToastBar, Toaster, toast } from "react-hot-toast";
 export default function Login() {
     const router = useRouter()
   const [user, setUser] = React.useState({
@@ -37,6 +37,7 @@ export default function Login() {
   return (
     <div className=" flex flex-col min-h-screen justify-center items-center py-2">
       <h1>Login</h1>
+
 
       <label htmlFor="email">email</label>
       <input
